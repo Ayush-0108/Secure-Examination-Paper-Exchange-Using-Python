@@ -1,0 +1,99 @@
+================================================================================
+SECURE EXAMINATION-PAPER EXCHANGE — RECEIVER SECURITY AUDIT REPORT
+================================================================================
+Execution Timestamp: 2026-10-29T15:51:00.971168+00:00
+Target Protocol:     SecureExamExchange v1
+Cryptographic Stack: RSA-3072, RSA-OAEP-SHA256, RSA-PSS-SHA256, AES-256-GCM, SHA-256
+Test Environment:    Python 3.11+ / cryptography library / Windows 11
+--------------------------------------------------------------------------------
+OVERALL SUMMARY:     20 / 20 TESTS PASSED (100.0%)
+================================================================================
+
+[PASS] Test 01: Test A: RSA Key Management (Generation, PKCS#8 Encryption, Passphrase Check, Fingerprint)
+       Expected: RSA-3072 keys generated, passphrase-protected, bad passphrase rejected, fingerprints formatted
+       Actual:   Key generation and reload successful. Passphrase protection verified. Fingerprint: B4:B9:B5:D4:F2...
+
+[PASS] Test 02: Test B: Successful End-to-End Recovery (Valid Package)
+       Expected: Signature verified, session key recovered, AES-GCM decrypted, SHA-256 match, exact plaintext saved
+       Actual:   PASS: Verified signature & GCM tag. Plaintext matches byte-for-byte (87 bytes).
+
+[PASS] Test 03: Test C: Untrusted / Wrong Sender Public Key
+       Expected: Signature verification fails before any RSA key recovery; no plaintext released
+       Actual:   Rejected cleanly at Stage 2 (Signature Verification): Sender digital signature verification failed. The package may have been altered or signed with an untrusted key.
+
+[PASS] Test 04: Test D: Unauthorized / Wrong Receiver Private Key
+       Expected: RSA-OAEP session key recovery fails; zero plaintext released
+       Actual:   Rejected cleanly at Stage 4 (RSA-OAEP key recovery): Failed to recover AES session key using receiver private key (RSA-OAEP decryption failed): Decryption failed
+
+[PASS] Test 05: Test E: Tampering Detection (ciphertext)
+       Expected: Tampering in ciphertext is caught; package rejected without plaintext output
+       Actual:   Tampering in 'ciphertext' detected cleanly (SecurityVerificationError); no plaintext released.
+
+[PASS] Test 06: Test E: Tampering Detection (metadata)
+       Expected: Tampering in metadata is caught; package rejected without plaintext output
+       Actual:   Tampering in 'metadata' detected cleanly (SecurityVerificationError); no plaintext released.
+
+[PASS] Test 07: Test E: Tampering Detection (nonce)
+       Expected: Tampering in nonce is caught; package rejected without plaintext output
+       Actual:   Tampering in 'nonce' detected cleanly (SecurityVerificationError); no plaintext released.
+
+[PASS] Test 08: Test E: Tampering Detection (tag)
+       Expected: Tampering in tag is caught; package rejected without plaintext output
+       Actual:   Tampering in 'tag' detected cleanly (SecurityVerificationError); no plaintext released.
+
+[PASS] Test 09: Test E: Tampering Detection (encrypted_key)
+       Expected: Tampering in encrypted_key is caught; package rejected without plaintext output
+       Actual:   Tampering in 'encrypted_key' detected cleanly (SecurityVerificationError); no plaintext released.
+
+[PASS] Test 10: Test E: Tampering Detection (signature)
+       Expected: Tampering in signature is caught; package rejected without plaintext output
+       Actual:   Tampering in 'signature' detected cleanly (SecurityVerificationError); no plaintext released.
+
+[PASS] Test 11: Test E: Tampering Detection (protocol)
+       Expected: Tampering in protocol is caught; package rejected without plaintext output
+       Actual:   Tampering in 'protocol' detected cleanly (ProtocolValidationError); no plaintext released.
+
+[PASS] Test 12: Test E: Tampering Detection (version)
+       Expected: Tampering in version is caught; package rejected without plaintext output
+       Actual:   Tampering in 'version' detected cleanly (ProtocolValidationError); no plaintext released.
+
+[PASS] Test 13: Test F: Malformed Input (Malformed JSON syntax)
+       Expected: Rejects input with ProtocolValidationError containing 'Malformed JSON syntax'
+       Actual:   Rejected with ProtocolValidationError: Malformed JSON syntax: Expecting property name enclosed in d...
+
+[PASS] Test 14: Test F: Malformed Input (Duplicate JSON keys)
+       Expected: Rejects input with ProtocolValidationError containing 'Duplicate key detected'
+       Actual:   Rejected with ProtocolValidationError: Duplicate key detected in JSON: 'protocol'...
+
+[PASS] Test 15: Test F: Malformed Input (Invalid UTF-8)
+       Expected: Rejects input with ProtocolValidationError containing 'Invalid UTF-8'
+       Actual:   Rejected with ProtocolValidationError: Invalid UTF-8 encoding in JSON input: 'utf-8' codec can't de...
+
+[PASS] Test 16: Test F: Malformed Input (Missing required field)
+       Expected: Rejects input with ProtocolValidationError containing 'Missing required'
+       Actual:   Rejected with ProtocolValidationError: Missing required top-level package keys: ['ciphertext', 'enc...
+
+[PASS] Test 17: Test F: Malformed Input (Invalid Base64 in tag)
+       Expected: Rejects input with ProtocolValidationError containing 'Missing required'
+       Actual:   Rejected with ProtocolValidationError: Missing required metadata keys: ['created_at', 'encryption',...
+
+[PASS] Test 18: Test G: Zero-Length and Arbitrary Binary Files
+       Expected: Exact byte-for-byte recovery of empty file and binary data containing null bytes
+       Actual:   Both 0-byte and 517-byte binary files recovered with exact integrity.
+
+[PASS] Test 19: Test H: Output Safety & Path Traversal Defense
+       Expected: Blocks directory traversal attacks and prevents silent overwrite of existing papers
+       Actual:   Path traversal blocked in Stage 1. Pre-existing file overwrite strictly blocked without confirmation.
+
+[PASS] Test 20: Test I: Replay Attack Analysis & Mitigation Documentation
+       Expected: Demonstrates why valid signature does not prevent replay without application-level tracking
+       Actual:   Verified: Digital signatures verify authenticity at creation time, not transmission uniqueness. Documented production mitigations: monotonic message sequence IDs, nonce caches, and UTC validity windows.
+
+================================================================================
+CONCLUSION: RECEIVER SECURITY & PROTOCOL COMPLIANCE VERIFIED
+================================================================================
+1. All cryptographic operations fail-closed with zero plaintext leakage on any error.
+2. Sender identity and package integrity are authenticated strictly before RSA decryption.
+3. File persistence implements path-traversal immunity and atomic publication.
+4. Keys are managed with PKCS#8 encrypted serialization and out-of-band SHA-256 fingerprints.
+================================================================================

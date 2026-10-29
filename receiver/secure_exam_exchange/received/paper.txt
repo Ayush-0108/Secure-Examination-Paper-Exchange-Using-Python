@@ -1,0 +1,62 @@
+================================================================================
+INSTITUTE OF CYBERSECURITY AND ADVANCED COMPUTING
+DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING
+ANNUAL SEMESTER EXAMINATION — FALL 2026
+COURSE CODE: CS-402 | ADVANCED CRYPTOGRAPHY AND SECURE SYSTEMS
+TIME ALLOWED: 3 HOURS                                  MAXIMUM MARKS: 100
+CONFIDENTIAL EXAMINATION PAPER — FOR AUTHORIZED EXAMINATION CENTERS ONLY
+================================================================================
+
+SECTION A: APPLIED CRYPTOGRAPHIC PROTOCOLS (40 MARKS)
+--------------------------------------------------------------------------------
+1. (10 Marks) Explain why encrypting a document with RSA alone is inefficient for 
+   large files. Contrast RSA-OAEP with hybrid cryptosystems combining RSA-OAEP 
+   and AES-256-GCM in terms of computational complexity, key encapsulation, and 
+   security guarantees.
+
+2. (10 Marks) In the Galois/Counter Mode (AES-GCM), describe the critical role of 
+   the Nonce (Initialization Vector) and Authentication Tag. What catastrophic 
+   vulnerabilities arise if a nonce is reused under the same secret key?
+
+3. (10 Marks) Explain the mathematical and security distinctions between PKCS#1 v1.5 
+   signature padding and the Probabilistic Signature Scheme (RSA-PSS). Why does 
+   modern cryptography mandate PSS for digital signature generation?
+
+4. (10 Marks) In authenticated data transfer, define Authenticated Additional Data 
+   (AAD). Why is it essential to bind non-confidential metadata (such as sender ID, 
+   recipient ID, and file size) to the ciphertext using AAD during AES-GCM operations?
+
+--------------------------------------------------------------------------------
+SECTION B: PRACTICAL SECURITY ENGINEERING (40 MARKS)
+--------------------------------------------------------------------------------
+5. (15 Marks) Consider an untrusted communication channel where an adversary can 
+   intercept, modify, and replay messages:
+   (a) How does an RSA-PSS signature over the canonical JSON package protect integrity?
+   (b) Does digital signature verification alone prevent replay attacks? Detail two 
+       practical mechanisms (e.g., cryptographic nonces, synchronized timestamps, or 
+       persistent message sequence registries) to eliminate replay vulnerability.
+
+6. (15 Marks) Design a secure key storage protocol for an examination coordinator:
+   (a) Why must RSA private keys be protected with PKCS#8 encrypted serialization 
+       (using PBKDF2/scrypt key derivation) rather than stored in plaintext PEM?
+   (b) Outline the public-key distribution dilemma and explain how out-of-band SHA-256 
+       SubjectPublicKeyInfo fingerprints establish key authenticity without a full PKI.
+
+7. (10 Marks) Describe the principle of "Fail-Closed" in cryptographic engineering. 
+   Why must a secure receiver discard partial plaintext and refuse file creation 
+   when signature verification, GCM authentication, or SHA-256 checks fail?
+
+--------------------------------------------------------------------------------
+SECTION C: PROTOCOL ANALYSIS & ATTACK SCENARIOS (20 MARKS)
+--------------------------------------------------------------------------------
+8. (20 Marks) Analyze the following attack vectors against the SecureExamExchange protocol:
+   (a) Ciphertext Bit-Flipping: What prevents an attacker from flipping bits in the 
+       ciphertext to alter examination questions?
+   (b) Recipient ID Substitution: If Alice encrypts for Bob, but Eve re-labels the 
+       recipient ID to Charlie, at what stage does the receiver detect this alteration?
+   (c) Key Separation: Why must the sender's signing key and receiver's encryption key 
+       remain completely separate cryptographic entities?
+
+================================================================================
+END OF EXAMINATION PAPER — STRICTLY CONFIDENTIAL
+================================================================================

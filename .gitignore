@@ -1,19 +1,22 @@
-__pycache__/
-*.py[cod]
+# Python & Virtual Environment
 .venv/
 venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# IDE & OS files
+.vscode/
+.idea/
+*.swp
+*~
+Thumbs.db
+Desktop.ini
+
+# Security & Secrets: Never commit private keys!
+*private*.pem
+*.key
+*.priv
 .env
-.env.*
-!.env.example
-
-paper.txt
-paper_encrypted_package.json
-*_encrypted_package.json
-
-secure_exam_exchange/keys/
-secure_exam_exchange/input_papers/
-secure_exam_exchange/outgoing/
-secure_exam_exchange/received_public_keys/
-secure_exam_exchange/test_results/
-secure_exam_exchange/exported_keys/
-secure_exam_exchange/exported_packages/
